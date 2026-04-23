@@ -1,4 +1,5 @@
-import type { IStep } from "./steps/IStep";
+
+import { IStep } from "./IStep";
 import type { PipelineContext } from "./PipelineContext";
 
 export class PipelineRunner {
