@@ -15,7 +15,7 @@ export default defineConfig({
           name: "integration",
           include: ["src/**/*.integration.test.ts"],
           environment: "node",
-          setupFiles: ["src/test/setup.integration.ts"],
+          setupFiles: ["src/setup.integration.ts"],
         },
       },
       {
