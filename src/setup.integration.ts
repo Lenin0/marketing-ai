@@ -1,5 +1,5 @@
 import { PGlite } from "@electric-sql/pglite";
-import { drizzle } from "drizzle-orm/singlestore";
+import { drizzle } from "drizzle-orm/pglite";
 import { beforeAll, afterAll } from "vitest";
 
 let client: PGlite
