@@ -8,3 +8,5 @@ export const AnalysedBriefingSchema = z.object({
   goal: z.enum(["awareness", "conversion", "retention", "education"]),
   keywords: z.array(z.string()).max(5),
 });
+
+export type AnalysedBriefingSchemaType = z.infer<typeof AnalysedBriefingSchema>

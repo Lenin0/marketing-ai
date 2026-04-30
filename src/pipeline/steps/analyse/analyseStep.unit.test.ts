@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import type { PipelineContext } from "../../PipelineContext";
 import { AnalyseStep } from "./analyse.step";
-import { IAIProvider } from "../../../infra/ai/contractAI";
+import { IAIProvider } from "../../../infra/contract/contractAI";
 
 const baseCtx: PipelineContext = {
   briefing: "Gateway IoT da BZU monitora temperatura com precisão de ±0.1°C...",
@@ -56,7 +56,7 @@ describe("AnalyseStep", () => {
       const invalid = { ...validAnalysis, tone: "invalid_tone" };
       const step = new AnalyseStep(makeAI(JSON.stringify(invalid)));
 
-      await expect(step.exec(baseCtx)).rejects.toThrow(/tone/);
+      await expect(step.exec(baseCtx)).rejects.toThrow(/AI_PARSER_ERROR/);
     });
   });
 
