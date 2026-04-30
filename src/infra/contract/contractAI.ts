@@ -1,5 +1,5 @@
 export interface CompletionOptions {
-  temperature?: number;
+  creativity?: "none" | "low" | "medium" | "high";
   maxTokens?: number;
   model?: string;
 }
