@@ -1,28 +1,49 @@
 import { z } from "zod";
+import { AIParserError } from "./AIparseErro";
 
 export class AIParser {
-
   static parse<T>(raw: string, schema: z.ZodType<T>): T {
-    try {
-      const cleaned = raw
-        .replace(/```json\s*/g, "")
-        .replace(/```\s*/g, "")
-        .trim();
+    const jsonString = this.extractJson(raw);
+    const obj = this.safeJsonParse(jsonString, raw);
+    return this.validateSchema(obj, schema);
+  }
 
-      const start = cleaned.indexOf("{");
-      const end = cleaned.lastIndexOf("}");
-      
-      if (start === -1 || end === -1) {
-        throw new Error("No JSON object found in AI response");
-      }
-      
-      const jsonStr = cleaned.slice(start, end + 1);
-      const parsed = JSON.parse(jsonStr);
-
-      return schema.parse(parsed);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      throw new Error(`[AI_PARSER_ERROR]: ${message} | Raw: ${raw.slice(0, 50)}...`);
+  private static extractJson(raw: string): string {
+    if (!raw) {
+      throw new AIParserError(
+        "received empty or undefined string from AI",
+        "EMPTY_INPUT"
+      );
     }
+    const cleaned = raw.replace(/```json\s*|```\s*/g, "").trim();
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+
+    if (start === -1 || end === -1) {
+      throw new AIParserError("no JSON object found", raw);
+    }
+    return cleaned.slice(start, end + 1);
+  }
+
+  private static safeJsonParse(jsonString: string, raw: string): unknown {
+    try {
+      return JSON.parse(jsonString);
+    } catch (err) {
+      throw new AIParserError(
+        err instanceof Error ? err.message : "invalid format",
+        raw
+      );
+    }
+  }
+
+  private static validateSchema<T>(obj: unknown, schema: z.ZodType<T>): T {
+    const result = schema.safeParse(obj);
+    if (!result.success) {
+      const fields = result.error.issues
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
+        .join(", ");
+      throw new AIParserError(`schema validation failed: ${fields}`);
+    }
+    return result.data;
   }
 }
