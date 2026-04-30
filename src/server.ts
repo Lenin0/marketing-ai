@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import { fileURLToPath } from "node:url";
-import { campaignRoutes } from "./http/routes/campaign";
+import { campaignRoutes } from "./http/routes/campaings/campaigns.routes";
 
 export function buildApp() {
   const app = Fastify({ logger: false });

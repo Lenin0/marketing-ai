@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { FastifyInstance } from "fastify";
-import { buildApp } from "../../server";
-import { PipelineRunner } from "../../pipeline/PipelineRunner";
-import { PipelineContext } from "../../pipeline/PipelineContext";
+import { buildApp } from "../../../server";
+import { PipelineRunner } from "../../../pipeline/PipelineRunner";
+import { PipelineContext } from "../../../pipeline/PipelineContext";
 
 
 vi.mock("../../pipeline/PipelineRunner");
