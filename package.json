@@ -13,7 +13,8 @@
     "test:all": "vitest run",
     "test:watch": "vitest --project unit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "keywords": [],
   "author": "",
@@ -21,19 +22,24 @@
   "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
+    "@dotenvx/dotenvx": "^1.64.0",
     "@electric-sql/pglite": "^0.4.4",
     "@fastify/cors": "^11.2.0",
+    "@fastify/helmet": "^13.0.2",
     "@fastify/jwt": "^10.0.0",
     "@fastify/multipart": "^10.0.0",
+    "@fastify/rate-limit": "^10.3.0",
     "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "fastify-type-provider-zod": "^6.1.0",
     "openai": "^6.34.0",
+    "postgres": "^3.4.9",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "tsup": "^8.5.1",
