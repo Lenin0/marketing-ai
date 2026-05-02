@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import type { PipelineContext } from "../../PipelineContext";
 import { AnalyseStep } from "./analyse.step";
-import { IAIProvider } from "../../../infra/contract/contractAI";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
 
 const baseCtx: PipelineContext = {
   briefing: "Gateway IoT da BZU monitora temperatura com precisão de ±0.1°C...",
