@@ -4,7 +4,7 @@ import { campaignRoutes } from "./http/routes/campaings/campaigns.routes";
 
 export function buildApp() {
   const app = Fastify({ logger: false });
-  app.register(campaignRoutes);
+  
   return app;
 }
 
