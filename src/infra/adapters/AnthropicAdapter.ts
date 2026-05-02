@@ -1,5 +1,5 @@
 import type Anthropic from "@anthropic-ai/sdk";
-import { IAIProvider, CompletionOptions } from "../contract/contractAI";
+import { IAIProvider, CompletionOptions } from "../contract/ai.contract";
 
 const TOP_P_MAP = {
   none:   0.1,
