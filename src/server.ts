@@ -1,23 +1,31 @@
 import Fastify from "fastify";
-import { fileURLToPath } from "node:url";
+
 import { campaignRoutes } from "./http/routes/campaings/campaigns.routes";
+import { clientProfileRoutes } from "./http/routes/clientProfile/clientProfile.routes";
+
+import { securityPlugin } from "./http/plugins/security.plugin";
+import { multipartPlugin } from "./http/plugins/multipart.plugin";
+import { errorHandler } from "./http/middlewares/errorHandler";
+import { container } from "./container";
 
 export function buildApp() {
-  const app = Fastify({ logger: false });
-  
+  const app = Fastify({ logger: process.env.NODE_ENV !== "test" });
+  const deps = container.getDependencies();
+
+  app.register(securityPlugin);
+  app.register(multipartPlugin);
+  app.setErrorHandler(errorHandler);
+
+  app.register(campaignRoutes, { 
+    aiProvider: deps.aiProvider, 
+    imageProvider: deps.imageProvider,
+    authenticate: deps.authenticate 
+  });
+
+  app.register(clientProfileRoutes, { 
+    clientProfileRepository: deps.clientProfileRepository,
+    authenticate: deps.authenticate 
+  });
+
   return app;
-}
-
-const isEntrypoint = process.argv[1] === fileURLToPath(import.meta.url);
-
-if (isEntrypoint) {
-  const app = buildApp();
-
-  try {
-    await app.listen({ port: Number(process.env.PORT ?? 3000), host: "0.0.0.0" });
-    console.log(`running on port ${process.env.PORT ?? 3000}`);
-  } catch (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
 }
