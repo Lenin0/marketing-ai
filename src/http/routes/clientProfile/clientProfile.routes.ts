@@ -1,5 +1,4 @@
-import type { FastifyInstance } from "fastify";
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyPluginOptions } from "fastify";
 import {
   CreateClientProfileSchema,
   UpdateClientProfileBodySchema,
@@ -9,19 +8,24 @@ import {
 import { IClientProfileRepository } from "../../../infra/contract/clientProfile.contratc";
 import { makeClientProfileController } from "./clientProfile.controler";
 
+interface clientProfileRoutesOptions extends FastifyPluginOptions {
+  clientProfileRepository: IClientProfileRepository;
+  authenticate: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
+}
 
-export async function brandRoutes(
+export async function clientProfileRoutes(
   app: FastifyInstance,
-  opts: { brandRepository: IClientProfileRepository }
+  opts: clientProfileRoutesOptions,
 ): Promise<void> {
-  app.setValidatorCompiler(validatorCompiler);
-  app.setSerializerCompiler(serializerCompiler);
 
-  const controller = makeClientProfileController(opts.brandRepository);
+  const controller = makeClientProfileController(opts.clientProfileRepository);
 
   app.post(
     "/profile",
-    { schema: { body: CreateClientProfileSchema } },
+    { 
+      onRequest: [opts.authenticate],
+      schema: { body: CreateClientProfileSchema } 
+    },
     controller.create
   );
 
@@ -29,19 +33,28 @@ export async function brandRoutes(
 
   app.get(
     "/profile/:id",
-    { schema: { params: ClientProfileParamsSchema } },
+    { 
+      onRequest: [opts.authenticate],
+      schema: { params: ClientProfileParamsSchema } 
+    },
     controller.findById
   );
 
   app.patch(
     "/profile/:id",
-    { schema: { params: ClientProfileParamsSchema, body: UpdateClientProfileBodySchema } },
+    { 
+      onRequest: [opts.authenticate],
+      schema: { params: ClientProfileParamsSchema, body: UpdateClientProfileBodySchema } 
+    },
     controller.update
   );
 
   app.delete(
     "/profile/:id",
-    { schema: { params: ClientProfileParamsSchema } },
+    { 
+      onRequest: [opts.authenticate],
+      schema: { params: ClientProfileParamsSchema } 
+    },
     controller.delete
   );
 }
