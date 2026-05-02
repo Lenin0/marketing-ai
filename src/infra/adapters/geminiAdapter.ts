@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { IAIProvider, CompletionOptions } from "../contract/contractAI";
-import { IImageProvider, ImageOptions } from "../contract/contractImage";
+import { IAIProvider, CompletionOptions } from "../contract/ai.contract";
+import { IImageProvider, ImageOptions } from "../contract/imageAI.contract";
 
 const TEMPERATURE_MAP = {
   none:   0.0,
