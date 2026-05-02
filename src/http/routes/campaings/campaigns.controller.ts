@@ -4,8 +4,8 @@ import { PipelineRunner } from "../../../pipeline/PipelineRunner";
 import { AnalyseStep } from "../../../pipeline/steps/analyse/analyse.step";
 import { CopyStep } from "../../../pipeline/steps/copy/copy.step";
 import { ImageStep } from "../../../pipeline/steps/image/image.step";
-import { IAIProvider } from "../../../infra/contract/contractAI";
-import { IImageProvider } from "../../../infra/contract/contractImage";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
+import { IImageProvider } from "../../../infra/contract/imageAI.contract";
 
 export function makeCampaingController(
   aiProvider: IAIProvider,

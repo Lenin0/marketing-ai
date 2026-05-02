@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { PipelineContext } from "../../PipelineContext";
-import { IImageProvider } from "../../../infra/contract/contractImage";
+import { IImageProvider } from "../../../infra/contract/imageAI.contract";
 import { ImageStep } from "./image.step";
-import { IAIProvider } from "../../../infra/contract/contractAI";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
 
 const baseCtx: PipelineContext = {
   briefing: "Gateway IoT BZU para indústria alimentícia",

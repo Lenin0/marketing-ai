@@ -1,7 +1,7 @@
 import { IStep } from "../../IStep";
 import { PipelineContext } from "../../PipelineContext";
-import { IAIProvider } from "../../../infra/contract/contractAI";
-import { IImageProvider } from "../../../infra/contract/contractImage";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
+import { IImageProvider } from "../../../infra/contract/imageAI.contract";
 import { buildImagePrompt } from "./image.prompt";
 
 export class ImageStep implements IStep {

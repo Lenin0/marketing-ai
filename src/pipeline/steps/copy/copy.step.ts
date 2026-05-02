@@ -1,4 +1,4 @@
-import { IAIProvider } from "../../../infra/contract/contractAI";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
 import { AIParser } from "../../../utils/AIparse";
 import { IStep } from "../../IStep";
 import { PipelineContext } from "../../PipelineContext";

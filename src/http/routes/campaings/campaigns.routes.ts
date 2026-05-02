@@ -5,8 +5,9 @@ import {
 } from "fastify-type-provider-zod";
 import { CreateCampaignBodySchema } from "./campaigns.schema";
 import { makeCampaingController } from "./campaigns.controller";
-import type { IAIProvider } from "../../../infra/contract/contractAI";
-import type { IImageProvider } from "../../../infra/contract/contractImage";
+import type { IAIProvider } from "../../../infra/contract/ai.contract";
+import type { IImageProvider } from "../../../infra/contract/imageAI.contract";
+import { generationRateLimit } from "../../middlewares/rateLimiter";
 
 export async function campaignRoutes(
   app: FastifyInstance,
@@ -20,9 +21,8 @@ export async function campaignRoutes(
   app.post(
     "/campaigns",
     {
-      schema: {
-        body: CreateCampaignBodySchema,
-      },
+      config: { rateLimit: generationRateLimit },
+      schema: { body: CreateCampaignBodySchema },
     },
     controller.create
   )

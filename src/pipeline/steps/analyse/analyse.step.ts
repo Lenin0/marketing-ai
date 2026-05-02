@@ -3,7 +3,7 @@ import { IStep } from "../../IStep";
 import { buildAnalysePrompt } from "./analyse.prompt";
 
 import { AnalysedBriefingSchema } from "./analyse.schema";
-import { IAIProvider } from "../../../infra/contract/contractAI";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
 import { AIParser } from "../../../utils/AIparse";
 
 export class AnalyseStep implements IStep {
