@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { PipelineContext } from "../../PipelineContext";
-import { IAIProvider } from "../../../infra/contract/contractAI";
+import { IAIProvider } from "../../../infra/contract/ai.contract";
 import { CopyStep } from "./copy.step";
 
 
