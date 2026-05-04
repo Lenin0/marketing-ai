@@ -15,8 +15,7 @@ import { makeAuthenticate } from "./http/middlewares/authenticate";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { IClientProfileRepository } from "./infra/contract/clientProfile.contratc";
 
-// depende de interfaces — não de implementações concretas
-export interface AppDependencies {
+export interface IAppDependencies {
   authProvider:            IContractAuthProvider;
   authenticate:            (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
   aiProvider:              IAIProvider;
@@ -27,7 +26,7 @@ export interface AppDependencies {
 
 export class DependencyContainer {
   private static instance: DependencyContainer;
-  private dependencies: Partial<AppDependencies> = {};
+  private dependencies: Partial<IAppDependencies> = {};
 
   private constructor() {}
 
@@ -38,7 +37,7 @@ export class DependencyContainer {
     return DependencyContainer.instance;
   }
 
-  public createDependencies(): AppDependencies {
+  public createDependencies(): IAppDependencies {
     const authProvider = new FirebaseAuthProvider();
     const authenticate = makeAuthenticate(authProvider);
 
@@ -52,7 +51,7 @@ export class DependencyContainer {
     const db = createDb(process.env.DATABASE_URL!);
     const clientProfileRepository = new ClientProfileRepository(db);
 
-    const deps: AppDependencies = {
+    const deps: IAppDependencies = {
       authProvider,
       authenticate,
       aiProvider,
@@ -65,16 +64,16 @@ export class DependencyContainer {
     return deps;
   }
 
-  public getDependencies(): AppDependencies {
+  public getDependencies(): IAppDependencies {
     if (Object.keys(this.dependencies).length === 0) {
       return this.createDependencies();
     }
-    return this.dependencies as AppDependencies;
+    return this.dependencies as IAppDependencies;
   }
 
-  public overrideDependency<K extends keyof AppDependencies>(
+  public overrideDependency<K extends keyof IAppDependencies>(
     key: K,
-    value: AppDependencies[K]
+    value: IAppDependencies[K]
   ): this {
     this.dependencies[key] = value;
 
@@ -92,4 +91,4 @@ export class DependencyContainer {
   }
 }
 
-export const container = DependencyContainer.getInstance();
+export const container = DependencyContainer.getInstance();4
