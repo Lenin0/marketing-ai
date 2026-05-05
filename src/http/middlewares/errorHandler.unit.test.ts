@@ -9,8 +9,17 @@ function makeReply() {
   } as unknown as FastifyReply;
 }
 
-function makeRequest() {
-  return {} as FastifyRequest;
+function makeRequest(): FastifyRequest {
+  return {
+    method: "POST",
+    url:    "/test",
+    log: {
+      error: vi.fn(),
+      info:  vi.fn(),
+      warn:  vi.fn(),
+      debug: vi.fn(),
+    },
+  } as unknown as FastifyRequest;
 }
 
 function makeError(message: string, statusCode?: number): FastifyError {
