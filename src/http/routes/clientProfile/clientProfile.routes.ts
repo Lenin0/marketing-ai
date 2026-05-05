@@ -32,7 +32,6 @@ export async function clientProfileRoutes(
 
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
   const controller = makeClientProfileController(opts.clientProfileRepository);
-  
 
   typedApp.post(
     "/client-profiles",
@@ -42,20 +41,21 @@ export async function clientProfileRoutes(
     },
     controller.create
   );
-
-  typedApp.get("/brands", controller.findAll);
-
   typedApp.get(
-    "/profile/:id",
+    "/client-profiles",
+    { onRequest: [opts.authenticate] },
+    controller.findAll
+  );
+  typedApp.get(
+    "/client-profiles/:id",
     {
       onRequest: [opts.authenticate],
       schema: { params: ClientProfileParamsSchema },
     },
     controller.findById
   );
-
   typedApp.patch(
-    "/profile/:id",
+    "/client-profiles/:id",
     {
       onRequest: [opts.authenticate],
       schema: {
@@ -65,9 +65,8 @@ export async function clientProfileRoutes(
     },
     controller.update
   );
-
   typedApp.delete(
-    "/profile/:id",
+    "/client-profiles/:id",
     {
       onRequest: [opts.authenticate],
       schema: { params: ClientProfileParamsSchema },
