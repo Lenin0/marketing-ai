@@ -1,3 +1,4 @@
+import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod'
 import type {
   FastifyInstance,
   FastifyPluginOptions,
@@ -20,12 +21,15 @@ export async function campaignRoutes(
   app: FastifyInstance,
   opts: CampaignRouteOptions
 ): Promise<void> {
+  app.setValidatorCompiler(validatorCompiler)
+  app.setSerializerCompiler(serializerCompiler)
+
   const controller = makeCampaingController(
     opts.aiProvider,
     opts.imageProvider
   );
 
-  app.post(
+  app.withTypeProvider<ZodTypeProvider>().post(
     "/campaigns",
     {
       onRequest: [opts.authenticate],
