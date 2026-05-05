@@ -1,30 +1,43 @@
-import type { FastifyInstance } from "fastify";
-import {
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
+import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod'
+import type {
+  FastifyInstance,
+  FastifyPluginOptions,
+  FastifyRequest,
+  FastifyReply,
+} from "fastify";
 import { CreateCampaignBodySchema } from "./campaigns.schema";
 import { makeCampaingController } from "./campaigns.controller";
 import type { IAIProvider } from "../../../infra/contract/ai.contract";
 import type { IImageProvider } from "../../../infra/contract/imageAI.contract";
 import { generationRateLimit } from "../../middlewares/rateLimiter";
 
+interface CampaignRouteOptions extends FastifyPluginOptions {
+  aiProvider: IAIProvider;
+  imageProvider: IImageProvider;
+  authenticate: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
+}
+
 export async function campaignRoutes(
   app: FastifyInstance,
-  opts: { aiProvider: IAIProvider; imageProvider: IImageProvider }
+  opts: CampaignRouteOptions
 ): Promise<void> {
-  app.setValidatorCompiler(validatorCompiler);
-  app.setSerializerCompiler(serializerCompiler);
+  app.setValidatorCompiler(validatorCompiler)
+  app.setSerializerCompiler(serializerCompiler)
 
-  const controller = makeCampaingController(opts.aiProvider, opts.imageProvider);
-  
-  app.post(
+  const controller = makeCampaingController(
+    opts.aiProvider,
+    opts.imageProvider
+  );
+
+  app.withTypeProvider<ZodTypeProvider>().post(
     "/campaigns",
     {
+      onRequest: [opts.authenticate],
       config: { rateLimit: generationRateLimit },
-      schema: { body: CreateCampaignBodySchema },
+      schema: {
+        body: CreateCampaignBodySchema,
+      },
     },
     controller.create
-  )
-
+  );
 }

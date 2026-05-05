@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { CreateCampaignBody } from "./campaigns.schema";
+import { CreateCampaignBodySchema } from "./campaigns.schema";
 import { PipelineRunner } from "../../../pipeline/PipelineRunner";
 import { AnalyseStep } from "../../../pipeline/steps/analyse/analyse.step";
 import { CopyStep } from "../../../pipeline/steps/copy/copy.step";
@@ -12,11 +12,9 @@ export function makeCampaingController(
   imageProvider: IImageProvider
 ) {
   return {
-    async create(
-      req: FastifyRequest<{ Body: CreateCampaignBody }>,
-      reply: FastifyReply
-    ): Promise<void> {
-      const { briefing, channel, brandProfile, referenceImageUrl } = req.body;
+    async create(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+      const body = CreateCampaignBodySchema.parse(req.body);
+      const { briefing, channel, brandProfile, referenceImageUrl } = body;
 
       const runner = new PipelineRunner(
         [

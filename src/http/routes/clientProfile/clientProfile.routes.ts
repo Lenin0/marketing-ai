@@ -1,5 +1,9 @@
-import type { FastifyInstance } from "fastify";
-import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+import type {
+  FastifyInstance,
+  FastifyRequest,
+  FastifyReply,
+  FastifyPluginOptions,
+} from "fastify";
 import {
   CreateClientProfileSchema,
   UpdateClientProfileBodySchema,
@@ -7,41 +11,67 @@ import {
 } from "./clientProfile.schema";
 
 import { IClientProfileRepository } from "../../../infra/contract/clientProfile.contratc";
-import { makeClientProfileController } from "./clientProfile.controler";
+import { makeClientProfileController } from "./clientProfile.controller";
+import {
+  validatorCompiler,
+  serializerCompiler,
+  ZodTypeProvider,
+} from "fastify-type-provider-zod";
 
+interface clientProfileRoutesOptions extends FastifyPluginOptions {
+  clientProfileRepository: IClientProfileRepository;
+  authenticate: (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
+}
 
-export async function brandRoutes(
+export async function clientProfileRoutes(
   app: FastifyInstance,
-  opts: { brandRepository: IClientProfileRepository }
+  opts: clientProfileRoutesOptions
 ): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  const controller = makeClientProfileController(opts.brandRepository);
+  const typedApp = app.withTypeProvider<ZodTypeProvider>();
+  const controller = makeClientProfileController(opts.clientProfileRepository);
+  
 
-  app.post(
-    "/profile",
-    { schema: { body: CreateClientProfileSchema } },
+  typedApp.post(
+    "/client-profiles",
+    {
+      onRequest: [opts.authenticate],
+      schema: { body: CreateClientProfileSchema },
+    },
     controller.create
   );
 
-  app.get("/brands", controller.findAll);
+  typedApp.get("/brands", controller.findAll);
 
-  app.get(
+  typedApp.get(
     "/profile/:id",
-    { schema: { params: ClientProfileParamsSchema } },
+    {
+      onRequest: [opts.authenticate],
+      schema: { params: ClientProfileParamsSchema },
+    },
     controller.findById
   );
 
-  app.patch(
+  typedApp.patch(
     "/profile/:id",
-    { schema: { params: ClientProfileParamsSchema, body: UpdateClientProfileBodySchema } },
+    {
+      onRequest: [opts.authenticate],
+      schema: {
+        params: ClientProfileParamsSchema,
+        body: UpdateClientProfileBodySchema,
+      },
+    },
     controller.update
   );
 
-  app.delete(
+  typedApp.delete(
     "/profile/:id",
-    { schema: { params: ClientProfileParamsSchema } },
+    {
+      onRequest: [opts.authenticate],
+      schema: { params: ClientProfileParamsSchema },
+    },
     controller.delete
   );
 }

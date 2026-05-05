@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, jsonb } from "drizzle-orm/pg-core";
 
-export const clientProfile = pgTable("clientProfile", { 
+export const clientProfile = pgTable("client_profile", { 
     id: uuid("id").primaryKey().defaultRandom(),
     companyName: text("company_name").notNull(),
     voiceDescription: text("voice_description").notNull(),
@@ -18,5 +18,5 @@ export const campaigns = pgTable("campaings", {
     analysedBriefing: jsonb("analysed_briefing"),
     generatedCopy: jsonb("generated_copy"),
     generatedImageUrl: text("generated_image_url"),
-    createdAt: timestamp("creat_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
 })
