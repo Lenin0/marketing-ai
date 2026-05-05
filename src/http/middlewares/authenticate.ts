@@ -10,7 +10,6 @@ declare module "fastify" {
   }
 }
 
-
 export function makeAuthenticate(authProvider: IContractAuthProvider) {
   return async function authenticate(
     req: FastifyRequest,
