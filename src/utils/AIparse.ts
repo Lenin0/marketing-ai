@@ -3,27 +3,29 @@ import { AIParserError } from "./AIparseErro";
 
 export class AIParser {
   static parse<T>(raw: string, schema: z.ZodType<T>): T {
+    console.log("response ai: ", raw)
     const jsonString = this.extractJson(raw);
     const obj = this.safeJsonParse(jsonString, raw);
     return this.validateSchema(obj, schema);
   }
 
   private static extractJson(raw: string): string {
-    if (!raw) {
-      throw new AIParserError(
-        "received empty or undefined string from AI",
-        "EMPTY_INPUT"
-      );
-    }
-    const cleaned = raw.replace(/```json\s*|```\s*/g, "").trim();
-    const start = cleaned.indexOf("{");
-    const end = cleaned.lastIndexOf("}");
-
-    if (start === -1 || end === -1) {
-      throw new AIParserError("no JSON object found", raw);
-    }
-    return cleaned.slice(start, end + 1);
+  if (!raw) {
+    throw new AIParserError("received empty or undefined string from AI", "EMPTY_INPUT");
   }
+
+  const jsonMatch = raw.match(/(\{.*\}|\[.*\])/s);
+
+  if (!jsonMatch) {
+    throw new AIParserError("no JSON object found", raw);
+  }
+
+  let jsonString = jsonMatch[0];
+
+  jsonString = jsonString.replace(/```json|```/g, "").trim();
+
+  return jsonString;
+}
 
   private static safeJsonParse(jsonString: string, raw: string): unknown {
     try {
