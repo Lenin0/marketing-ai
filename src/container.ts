@@ -1,5 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import OpenAI from "openai";
+import 'dotenv/config'
 
 import type { IAIProvider } from "./infra/contract/ai.contract";
 import type { IImageProvider } from "./infra/contract/imageAI.contract";
@@ -8,12 +7,12 @@ import type { IContractAuthProvider } from "./infra/auth/contractAuthProvider";
 
 import { FirebaseAuthProvider } from "./infra/auth/firebaseAuthProvider";
 import { GeminiAdapter } from "./infra/adapters/geminiAdapter";
-import { OpenAIAdapter } from "./infra/adapters/openaiAdapter";
 import { createDb } from "./infra/db/client";
 import { ClientProfileRepository } from "./infra/repositories/clientProfile.repositories";
 import { makeAuthenticate } from "./http/middlewares/authenticate";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { IClientProfileRepository } from "./infra/contract/clientProfile.contratc";
+import { GoogleGenAI } from '@google/genai';
 
 export interface IAppDependencies {
   authProvider:            IContractAuthProvider;
@@ -29,6 +28,7 @@ export class DependencyContainer {
   private dependencies: Partial<IAppDependencies> = {};
 
   private constructor() {}
+  
 
   public static getInstance(): DependencyContainer {
     if (!DependencyContainer.instance) {
@@ -42,10 +42,10 @@ export class DependencyContainer {
     const authenticate = makeAuthenticate(authProvider);
 
     const aiProvider = new GeminiAdapter(
-      new GoogleGenerativeAI(process.env.GEMINIAI_API_KEY!)
+      new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
     );
-    const imageProvider = new OpenAIAdapter(
-      new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    const imageProvider = new GeminiAdapter(
+      new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
     );
 
     const db = createDb(process.env.DATABASE_URL!);
