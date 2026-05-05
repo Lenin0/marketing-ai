@@ -1,5 +1,5 @@
 {
-  "id": "51f659ff-f7f3-4780-9a98-12aae6a762c6",
+  "id": "d733fb26-dfc8-47b5-ad2e-2764b2bcf4f1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -51,8 +51,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "creat_at": {
-          "name": "creat_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -61,10 +61,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "campaings_client_profile_id_clientProfile_id_fk": {
-          "name": "campaings_client_profile_id_clientProfile_id_fk",
+        "campaings_client_profile_id_client_profile_id_fk": {
+          "name": "campaings_client_profile_id_client_profile_id_fk",
           "tableFrom": "campaings",
-          "tableTo": "clientProfile",
+          "tableTo": "client_profile",
           "columnsFrom": [
             "client_profile_id"
           ],
@@ -81,8 +81,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.clientProfile": {
-      "name": "clientProfile",
+    "public.client_profile": {
+      "name": "client_profile",
       "schema": "",
       "columns": {
         "id": {
@@ -116,15 +116,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "create_at": {
-          "name": "create_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "update_at": {
-          "name": "update_at",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
