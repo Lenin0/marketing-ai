@@ -55,7 +55,8 @@ export function makeClientProfileController(
       reply: FastifyReply
     ): Promise<void> {
       const { id } = ClientProfileParamsSchema.parse(req.params)
-      await repository.delete(id);
+      const userId  = req.user?.id; 
+      await repository.delete(id, userId);
       reply.status(204).send();
     },
   };
