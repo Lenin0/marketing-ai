@@ -15,5 +15,5 @@ export interface IClientProfileRepository {
   findAll(): Promise<ClientProfile[]>;
   findById(id: string): Promise<ClientProfile | null>;
   update(id: string, data: UpdateClientProfileBody): Promise<ClientProfile | null>;
-  delete(id: string): Promise<void>;
+  delete(id: string, userId: string): Promise<void>;
 }
