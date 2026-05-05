@@ -5,9 +5,10 @@ import { securityPlugin } from "./http/plugins/security.plugin";
 import { multipartPlugin } from "./http/plugins/multipart.plugin";
 import { errorHandler } from "./http/middlewares/errorHandler";
 import { container } from "./container";
+import { getLogger } from "./config/logger";
 
 export function buildApp() {
-  const app  = Fastify({ logger: process.env.NODE_ENV !== "test" });
+  const app  = Fastify({ logger: getLogger() });
   const deps = container.getDependencies();
 
   app.register(securityPlugin);
