@@ -3,6 +3,7 @@ import { PipelineRunner } from "./PipelineRunner";
 
 import { PipelineContext } from "./PipelineContext";
 import { IStep } from "./IStep";
+import { afterEach, beforeEach } from "node:test";
 
 const baseCtx: PipelineContext = {
   briefing: "Produto X para público Y",
@@ -139,6 +140,16 @@ describe("PipelineRunner", () => {
   });
 
   describe("retry", () => {
+
+    beforeEach(() => {
+
+      vi.useFakeTimers();
+    });
+  
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it("try again when the step fails and then succed", async () => {
       let attemps = 0;
 
